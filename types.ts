@@ -23,4 +23,5 @@ export interface Suggestion {
   average: number;
   current: readonly [string, number];
   recentReleases: (readonly [string, number])[];
+  estimatedUpdate?: number;
 }

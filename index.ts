@@ -10,7 +10,7 @@ const stringToUTCDate = (dateString: string) => {
 
 const getDateStringAndDifference = (current: Date, next: Date) => {
   const display = format(current, formatPattern);
-  const diffInDays = differenceInDays(current, next);
+  const diffInDays = differenceInDays(next, current);
   return [display, diffInDays] as const;
 };
 
@@ -42,12 +42,15 @@ export const getSuggestion = (product: Product, time: Date): Suggestion => {
     }
   );
 
-  const average =
+  const average = Math.round(
     recentReleases.reduce((sum, [_, diff]) => sum + diff, 0) /
-    recentReleases.length;
+      recentReleases.length
+  );
 
   const conclusion = getConclusion(
-    recentReleases.length > 0 ? average : product.estimatedUpdate!,
+    // prioty use estimated update span to get conclusion
+    // there should always be a valid estimatedUpdate Value if some product never updated
+    product.estimatedUpdate || average,
     current[1]
   );
 
@@ -57,6 +60,7 @@ export const getSuggestion = (product: Product, time: Date): Suggestion => {
     average,
     current,
     recentReleases,
+    estimatedUpdate: product.estimatedUpdate,
   };
 };
 
