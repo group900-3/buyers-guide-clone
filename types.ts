@@ -10,7 +10,7 @@ export interface Product {
   estimatedUpdate?: number;
 }
 
-enum Conclusion {
+export enum Conclusion {
   BUY_NOW,
   NEUTRAL,
   CAUTION,
@@ -21,6 +21,6 @@ export interface Suggestion {
   name: string;
   conclusion: Conclusion;
   average: number;
-  current: [string, number];
-  recentRelease: [string, number];
+  current: readonly [string, number];
+  recentReleases: (readonly [string, number])[];
 }
