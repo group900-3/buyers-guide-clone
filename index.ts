@@ -29,21 +29,16 @@ const getConclusion = (average: number, daysPassed: number) => {
 };
 
 export const getSuggestion = (product: Product, time: Date): Suggestion => {
-  const current = getDateStringAndDifference(
-    stringToUTCDate(product.current),
-    time
-  );
+  const [current, ...recentReleases] = product.releases;
+  const _current = getDateStringAndDifference(stringToUTCDate(current), time);
 
-  const recentReleases = product.recentReleases.map(
-    (dateString, index, arr) => {
-      const next = stringToUTCDate(arr[index + 1] || product.current);
-      const current = stringToUTCDate(dateString);
-      return getDateStringAndDifference(current, next);
-    }
-  );
+  const _recentReleases = recentReleases.map((dateString, index, arr) => {
+    const next = stringToUTCDate(arr[index - 1] || current);
+    return getDateStringAndDifference(stringToUTCDate(dateString), next);
+  });
 
   const average = Math.round(
-    recentReleases.reduce((sum, [_, diff]) => sum + diff, 0) /
+    _recentReleases.reduce((sum, [_, diff]) => sum + diff, 0) /
       recentReleases.length
   );
 
@@ -51,15 +46,15 @@ export const getSuggestion = (product: Product, time: Date): Suggestion => {
     // prioty use estimated update span to get conclusion
     // there should always be a valid estimatedUpdate Value if some product never updated
     product.estimatedUpdate || average,
-    current[1]
+    _current[1]
   );
 
   return {
     name: product.name,
     conclusion,
     average,
-    current,
-    recentReleases,
+    current: _current,
+    recentReleases: _recentReleases,
     estimatedUpdate: product.estimatedUpdate,
   };
 };
