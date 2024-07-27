@@ -3,12 +3,12 @@ import { differenceInDays, format } from "date-fns";
 
 const formatPattern = "MMM d y";
 
-const stringToUTCDate = (dateString: string) => {
+export const stringToUTCDate = (dateString: string) => {
   const [year, month, day] = dateString.split("-").map(Number);
   return new Date(Date.UTC(year, month - 1, day));
 };
 
-const getDateStringAndDifference = (current: Date, next: Date) => {
+export const getDateStringAndDifference = (current: Date, next: Date) => {
   const display = format(current, formatPattern);
   const diffInDays = differenceInDays(next, current);
   return [display, diffInDays] as const;

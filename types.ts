@@ -5,7 +5,7 @@ export interface Category {
 
 export interface Product {
   name: string;
-  releases: string[];
+  releases: `${string}-${string}-${string}`[];
   estimatedUpdate?: number;
 }
 
